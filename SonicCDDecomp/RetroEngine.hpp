@@ -27,8 +27,9 @@ typedef unsigned int uint;
 #define RETRO_ANDROID  (5)
 #define RETRO_WP7      (6)
 // Custom Platforms start here
-#define RETRO_VITA (7)
-#define RETRO_UWP  (8)
+#define RETRO_VITA  (7)
+#define RETRO_UWP   (8)
+#define RETRO_WII_U (9)
 
 // use this macro (RETRO_PLATFORM) to define platform specific code blocks and etc to run the engine
 #if defined _WIN32
@@ -55,6 +56,8 @@ typedef unsigned int uint;
 #endif
 #elif defined __vita__
 #define RETRO_PLATFORM (RETRO_VITA)
+#elif defined __WIIU__
+#define RETRO_PLATFORM (RETRO_WII_U)
 #else
 #define RETRO_PLATFORM (RETRO_WIN) // Default
 #endif
@@ -63,13 +66,17 @@ typedef unsigned int uint;
 #define BASE_PATH            "ux0:data/SonicCD/"
 #define DEFAULT_SCREEN_XSIZE 480
 #define DEFAULT_FULLSCREEN   true
+#elif RETRO_PLATFORM == RETRO_WII_U
+#define BASE_PATH            ""
+#define DEFAULT_SCREEN_XSIZE 400
+#define DEFAULT_FULLSCREEN   true
 #else
 #define BASE_PATH            ""
 #define DEFAULT_SCREEN_XSIZE 424
 #define DEFAULT_FULLSCREEN   false
 #endif
 
-#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_VITA || RETRO_PLATFORM == RETRO_UWP
+#if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_VITA || RETRO_PLATFORM == RETRO_UWP || RETRO_PLATFORM == RETRO_WII_U
 #define RETRO_USING_SDL (1)
 #else // Since its an else & not an elif these platforms probably aren't supported yet
 #define RETRO_USING_SDL (0)
@@ -99,10 +106,33 @@ typedef unsigned int uint;
 #define RETRO_GAMEPLATFORMID (RETRO_WIN) 
 #elif RETRO_PLATFORM == RETRO_UWP
 #define RETRO_GAMEPLATFORMID (RETRO_GAME_MOBILE)
+#elif RETRO_PLATFORM == RETRO_WII_U
+#define RETRO_GAMEPLATFORMID (RETRO_WIN)
 #else
 #error Unspecified RETRO_GAMEPLATFORMID
 #endif
 
+#endif
+
+//
+#if RETRO_USING_SDL
+#include <SDL.h>
+#if !(SDL_VERSION_ATLEAST(2,0,10))
+typedef enum
+{
+    SDL_TOUCH_DEVICE_INVALID = -1,
+    SDL_TOUCH_DEVICE_DIRECT,            // touch screen with window-relative coordinates
+    SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE, // trackpad with absolute device coordinates
+    SDL_TOUCH_DEVICE_INDIRECT_RELATIVE  // trackpad with screen cursor-relative coordinates
+} SDL_TouchDeviceType;
+#if defined(WARN_OUTDATED)
+#pragma message("SDL_GetTouchDeviceType is not supported before SDL 2.0.10")
+#endif
+static inline SDL_TouchDeviceType SDL_GetTouchDeviceType(SDL_TouchID touchID)
+{
+	return SDL_TOUCH_DEVICE_INVALID;
+}
+#endif
 #endif
 
 // this macro defines the touch device read by the game (UWP requires DIRECT)
@@ -179,6 +209,11 @@ enum RetroBytecodeFormat {
 #include "cocoaHelpers.hpp"
 #elif RETRO_PLATFORM == RETRO_VITA
 #include <SDL2/SDL.h>
+#include <vorbis/vorbisfile.h>
+#include <theora/theora.h>
+#include <theoraplay.h>
+#elif RETRO_PLATFORM == RETRO_Wii_U
+#include <SDL.h>
 #include <vorbis/vorbisfile.h>
 #include <theora/theora.h>
 #include <theoraplay.h>

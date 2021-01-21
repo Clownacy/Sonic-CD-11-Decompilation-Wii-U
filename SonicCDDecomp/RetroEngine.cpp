@@ -205,8 +205,21 @@ bool processEvents()
     return true;
 }
 
+#if RETRO_PLATFORM == RETRO_WII_U
+#include <whb/proc.h>
+#include <whb/sdcard.h>
+#include <unistd.h>
+#endif
+
 void RetroEngine::Init()
 {
+#if RETRO_PLATFORM == RETRO_WII_U
+    WHBProcInit();
+    WHBMountSdCard();
+    chdir(WHBGetSdCardMountPath());
+    chdir("SonicCD");
+#endif
+
     CalculateTrigAngles();
     GenerateBlendLookupTable();
 

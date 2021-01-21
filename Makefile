@@ -1,6 +1,15 @@
 CXXFLAGS_ALL = $(shell pkg-config --cflags sdl2 vorbisfile vorbis theoradec) -Idependencies/all/theoraplay $(CXXFLAGS)
 LDFLAGS_ALL = $(LDFLAGS)
-LIBS_ALL = $(shell pkg-config --libs sdl2 vorbisfile vorbis theoradec) -pthread $(LIBS)
+LIBS_ALL = $(shell pkg-config --libs sdl2 vorbisfile vorbis theoradec) $(LIBS)
+
+ifeq ($(WIIU),1)
+  include $(DEVKITPRO)/wut/share/wut_rules
+  NAME_EXTENSION = .elf
+  ARCH = $(MACHDEP)
+  CXXFLAGS_ALL += -D__WIIU__ -D__WUT__ -ffunction-sections -I$(WUT_ROOT)/include
+  LDFLAGS_ALL += $(ARCH) $(RPXSPECS) -L$(WUT_ROOT)/lib
+  LIBS_ALL += -lwut
+endif
 
 SOURCES = dependencies/all/theoraplay/theoraplay.c \
           SonicCDDecomp/Animation.cpp \
