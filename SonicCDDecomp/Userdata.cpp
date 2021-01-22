@@ -144,7 +144,11 @@ void InitUserdata()
         ini->SetInteger("Dev", "StartingScene", Engine.startStage = 0);
         ini->SetInteger("Dev", "FastForwardSpeed", Engine.fastForwardSpeed = 8);
         ini->SetBool("Dev", "UseSteamDir", Engine.useSteamDir = true);
+#if RETRO_PLATFORM == RETRO_WII_U
+        ini->SetBool("Dev", "UseHQModes", Engine.useHQModes = false); // HQ mode is too slow
+#else
         ini->SetBool("Dev", "UseHQModes", Engine.useHQModes = true);
+#endif
 
         ini->SetBool("Game", "Language", Engine.language = RETRO_EN);
 
@@ -199,7 +203,11 @@ void InitUserdata()
         if (!ini->GetBool("Dev", "UseSteamDir", &Engine.useSteamDir))
             Engine.useSteamDir = true;
         if (!ini->GetBool("Dev", "UseHQModes", &Engine.useHQModes))
+#if RETRO_PLATFORM == RETRO_WII_U
+            Engine.useHQModes = false; // HQ mode is too slow
+#else
             Engine.useHQModes = true;
+#endif
 
         if (!ini->GetInteger("Game", "Language", &Engine.language))
             Engine.language = RETRO_EN;
