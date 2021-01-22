@@ -510,6 +510,8 @@ void LoadSfx(char *filePath, byte sfxID)
 }
 void PlaySfx(int sfx, bool loop)
 {
+    SDL_LockAudio();
+
     int sfxChannelID = nextChannelPos++;
     for (int c = 0; c < CHANNEL_COUNT; ++c) {
         if (sfxChannels[c].sfxID == sfx) {
@@ -526,9 +528,13 @@ void PlaySfx(int sfx, bool loop)
     sfxInfo->pan          = 0;
     if (nextChannelPos == CHANNEL_COUNT)
         nextChannelPos = 0;
+
+    SDL_UnlockAudio();
 }
 void SetSfxAttributes(int sfx, int loopCount, sbyte pan)
 {
+    SDL_LockAudio();
+
     int sfxChannel = -1;
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
         if (sfxChannels[i].sfxID == sfx || sfxChannels[i].sfxID == -1) {
@@ -546,4 +552,6 @@ void SetSfxAttributes(int sfx, int loopCount, sbyte pan)
     sfxInfo->loopSFX      = loopCount == -1 ? sfxInfo->loopSFX : loopCount;
     sfxInfo->pan          = pan;
     sfxInfo->sfxID        = sfx;
+
+    SDL_UnlockAudio();
 }

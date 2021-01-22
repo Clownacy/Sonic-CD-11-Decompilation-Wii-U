@@ -113,6 +113,7 @@ void ProcessAudioMixing() {}
 
 inline void freeMusInfo()
 {
+    // TODO - This code is old and suffering from bitrot
     if (musInfo.loaded) {
         if (musInfo.musicFile)
             delete[] musInfo.musicFile;
@@ -139,12 +140,16 @@ void LoadSfx(char *filePath, byte sfxID);
 void PlaySfx(int sfx, bool loop);
 inline void StopSfx(int sfx)
 {
+    SDL_LockAudio();
+
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
         if (sfxChannels[i].sfxID == sfx) {
             MEM_ZERO(sfxChannels[i]);
             sfxChannels[i].sfxID = -1;
         }
     }
+
+    SDL_UnlockAudio();
 }
 void SetSfxAttributes(int sfx, int loopCount, sbyte pan);
 
@@ -176,6 +181,8 @@ inline void StopAllSfx()
 }
 inline void ReleaseGlobalSfx()
 {
+    SDL_LockAudio();
+
     for (int i = globalSFXCount; i >= 0; --i) {
         if (sfxList[i].loaded) {
             StrCopy(sfxList[i].name, "");
@@ -185,9 +192,13 @@ inline void ReleaseGlobalSfx()
         }
     }
     globalSFXCount = 0;
+
+    SDL_UnlockAudio();
 }
 inline void ReleaseStageSfx()
 {
+    SDL_LockAudio();
+
     for (int i = stageSFXCount + globalSFXCount; i >= globalSFXCount; --i) {
         if (sfxList[i].loaded) {
             StrCopy(sfxList[i].name, "");
@@ -197,6 +208,8 @@ inline void ReleaseStageSfx()
         }
     }
     stageSFXCount = 0;
+
+    SDL_UnlockAudio();
 }
 
 inline void ReleaseAudioDevice()
