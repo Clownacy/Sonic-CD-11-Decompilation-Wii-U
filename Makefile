@@ -2,6 +2,8 @@ CXXFLAGS_ALL = $(shell pkg-config --cflags sdl2 vorbisfile vorbis theoradec) -Id
 LDFLAGS_ALL = $(LDFLAGS)
 LIBS_ALL = $(shell pkg-config --libs sdl2 vorbisfile vorbis theoradec) $(LIBS)
 
+OBJDIR = objects
+
 ifeq ($(WIIU),1)
   include $(DEVKITPRO)/wut/share/wut_rules
   NAME_EXTENSION = .elf
@@ -9,6 +11,8 @@ ifeq ($(WIIU),1)
   CXXFLAGS_ALL += -D__WIIU__ -D__WUT__ -ffunction-sections -I$(WUT_ROOT)/include
   LDFLAGS_ALL += $(ARCH) $(RPXSPECS) -L$(WUT_ROOT)/lib
   LIBS_ALL += -lwut
+
+  OBJDIR = objectswiiu
 endif
 
 SOURCES = dependencies/all/theoraplay/theoraplay.c \
@@ -35,11 +39,11 @@ SOURCES = dependencies/all/theoraplay/theoraplay.c \
           SonicCDDecomp/Userdata.cpp \
           SonicCDDecomp/Video.cpp
 
-objects/%.o: %
+$(OBJDIR)/%.o: %
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS_ALL) $^ -o $@ -c
 
-soniccd: $(SOURCES:%=objects/%.o)
+soniccd: $(SOURCES:%=$(OBJDIR)/%.o)
 	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $^ -o $@ $(LIBS_ALL)
 
 install: soniccd
