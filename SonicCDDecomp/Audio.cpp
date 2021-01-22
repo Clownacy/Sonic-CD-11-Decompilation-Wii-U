@@ -391,9 +391,12 @@ bool PlayMusic(int track)
         return false;
     }
 
+    SDL_LockAudio();
+
+    if (musInfo.loaded)
+        StopMusic();
+
     if (LoadFile(trackPtr->fileName, &musInfo.fileInfo)) {
-        if (musInfo.loaded)
-            StopMusic();
 
         cFileHandleStream = cFileHandle;
         cFileHandle       = nullptr;
@@ -412,6 +415,7 @@ bool PlayMusic(int track)
 
         int error = ov_open_callbacks(&musInfo, &musInfo.vorbisFile, NULL, 0, callbacks);
         if (error != 0) {
+            SDL_UnlockAudio();
             return false;
         }
 
@@ -430,8 +434,14 @@ bool PlayMusic(int track)
         musicStatus  = MUSIC_PLAYING;
         masterVolume = MAX_VOLUME;
         trackID      = track;
+
+        SDL_UnlockAudio();
+
         return true;
     }
+
+    SDL_UnlockAudio();
+
     return false;
 }
 
