@@ -89,9 +89,9 @@ void ProcessAudioMixing(Sint32 *dst, const Sint16 *src, int len, int volume, sby
 
 inline void freeMusInfo()
 {
-    if (musInfo.loaded) {
-        SDL_LockAudio();
+    SDL_LockAudio();
 
+    if (musInfo.loaded) {
         if (musInfo.buffer)
             delete[] musInfo.buffer;
         if (musInfo.stream)
@@ -102,9 +102,9 @@ inline void freeMusInfo()
         musInfo.trackLoop    = false;
         musInfo.loopPoint    = 0;
         musInfo.loaded       = false;
-
-        SDL_UnlockAudio();
     }
+
+    SDL_UnlockAudio();
 }
 #else
 void ProcessMusicStream() {}
@@ -132,8 +132,12 @@ void SetMusicTrack(char *filePath, byte trackID, bool loop, uint loopPoint);
 bool PlayMusic(int track);
 inline void StopMusic()
 {
+    SDL_LockAudio();
+
     musicStatus = MUSIC_STOPPED;
     freeMusInfo();
+
+    SDL_UnlockAudio();
 }
 
 void LoadSfx(char *filePath, byte sfxID);
@@ -159,25 +163,42 @@ inline void SetMusicVolume(int volume)
         volume = 0;
     if (volume > MAX_VOLUME)
         volume = MAX_VOLUME;
+
+    SDL_LockAudio();
+
     masterVolume = volume;
+
+    SDL_UnlockAudio();
 }
 
 inline void PauseSound()
 {
+    SDL_LockAudio();
+
     if (musicStatus == MUSIC_PLAYING)
         musicStatus = MUSIC_PAUSED;
+
+    SDL_UnlockAudio();
 }
 
 inline void ResumeSound()
 {
+    SDL_LockAudio();
+
     if (musicStatus == MUSIC_PAUSED)
         musicStatus = MUSIC_PLAYING;
+
+    SDL_UnlockAudio();
 }
 
 
 inline void StopAllSfx()
 {
+    SDL_LockAudio();
+
     for (int i = 0; i < CHANNEL_COUNT; ++i) sfxChannels[i].sfxID = -1;
+
+    SDL_UnlockAudio();
 }
 inline void ReleaseGlobalSfx()
 {
