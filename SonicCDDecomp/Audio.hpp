@@ -27,7 +27,6 @@ struct MusicPlaybackInfo {
     SDL_AudioStream *stream;
     Sint16 *buffer;
 #endif
-    FileInfo fileInfo;
     bool trackLoop;
     uint loopPoint;
     bool loaded;
