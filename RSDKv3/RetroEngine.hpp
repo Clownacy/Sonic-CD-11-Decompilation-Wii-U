@@ -202,7 +202,7 @@ typedef unsigned int uint;
 #elif RETRO_PLATFORM == RETRO_UWP
 #define RETRO_GAMEPLATFORMID (UAP_GetRetroGamePlatformId())
 #elif RETRO_PLATFORM == RETRO_LINUX
-#define RETRO_GAMEPLATFORMID (RETRO_STANDARD)
+#define RETRO_GAMEPLATFORMID (RETRO_WIN)
 #else
 #error Unspecified RETRO_GAMEPLATFORMID
 #endif
