@@ -22,7 +22,7 @@ set(RETRO_OUTPUT_NAME ${RETRO_NAME} CACHE STRING "The exported name of the execu
 
 set(RETRO_FILES
     dependencies/all/tinyxml2/tinyxml2.cpp
-    dependencies/all/theoraplay/theoraplay.c
+    dependencies/all/theoraplay/theoraplay.cpp
     RSDKv3/Animation.cpp
     RSDKv3/Audio.cpp
     RSDKv3/Collision.cpp
