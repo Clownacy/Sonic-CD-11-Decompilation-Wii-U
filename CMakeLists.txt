@@ -186,3 +186,15 @@ target_compile_definitions(RetroEngine PRIVATE
     RETRO_DEV_EXTRA="${PLATFORM} - ${CMAKE_CXX_COMPILER_ID}"
     DECOMP_VERSION="${DECOMP_VERSION}"
 )
+
+if(WIIU)
+	wut_create_rpx(RetroEngine)
+	wut_create_wuhb(RetroEngine
+		NAME      "Sonic CD"
+		SHORTNAME "Sonic CD"
+		AURTHOR   "Clownacy, Rubberduckycooly, chuliRMG"
+		ICON      "wiiu/icon.png"
+		TVSPLASH  "wiiu/tv.png"
+		DRCSPLASH "wiiu/drc.png"
+	)
+endif()

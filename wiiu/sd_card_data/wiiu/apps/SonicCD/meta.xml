@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>Sonic CD</name>
+  <coder>Clownacy, Rubberduckycooly, chuliRMG</coder>
+  <version>1.0</version>
+  <release_date>20240421000000</release_date>
+  <url>https://github.com/Clownacy/Sonic-CD-11-Decompilation-Wii-U</url>
+  <short_description>Port of the Sonic CD 2011 decompilation.</short_description>
+  <long_description>Put your 'Data.rsdk' file in the 'SonicCD' folder on the SD card. The full path should be '[sd card]/SonicCD/Data.rsdk'.</long_description>
+  <category>game</category>
+</app>
